@@ -25,8 +25,7 @@ docker sandbox run shell ./the-workspace-that-will-be-mounted-into-the-sandbox
 then inside the sandbox, run:
 
 ```sh
-
-npm install
-npm run build
-npm run start
+git clone https://github.com/michalczukm/smallest-agent.git && cd smallest-agent
+npm ci
+ANTHROPIC_API_KEY=your-api-key-pls-limit-it npm run start
 ```
