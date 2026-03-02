@@ -27,7 +27,7 @@ const chat = async () => {
       Authorization: `Bearer ${process.env.MISTRAL_API_KEY}`,
     },
     body: JSON.stringify({
-      model: 'mistral-large-2512',
+      model: 'mistral-large-2512', //'devstral-latest',
       messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
       tools: [
         {
