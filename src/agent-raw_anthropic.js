@@ -21,7 +21,7 @@ const dispatcher = process.env.HTTPS_PROXY
 
 
 const chat = async () => {
-  console.log('🚀 ~ chat ~ messages:', JSON.stringify(messages, null, 2))
+  console.log('📨 ~ chat ~ messages:', JSON.stringify(messages, null, 2))
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     dispatcher,
@@ -44,7 +44,7 @@ const chat = async () => {
     }),
   });
   const data = await res.json();
-  console.log('🚀 ~ chat ~ data:', JSON.stringify(data, null, 2))
+  console.log('🚀 ~ chat ~ response:', JSON.stringify(data, null, 2))
   return data.content;
 };
 
@@ -53,9 +53,9 @@ const runTool = ({ input }) =>
   execSync(input.c + ';:') + '';
 
 // Each stdin chunk is one user turn (multi-line paste remains one turn).
-for await (const readLine of process.stdin) {
+for await (const line of process.stdin) {
   // Keep calling Claude until the turn ends with plain text (no tool request).
-  for (store('user', readLine + ''); ; ) {
+  for (store('user', line + ''); ; ) {
     const content = await chat();
     // Claude places the actionable block last: either tool_use or final text.
     const last = content.at(-1);
