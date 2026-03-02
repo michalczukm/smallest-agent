@@ -21,6 +21,7 @@ const dispatcher = process.env.HTTPS_PROXY
 
 
 const chat = async () => {
+  console.log('🚀 ~ chat ~ messages:', JSON.stringify(messages, null, 2))
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     dispatcher,
@@ -30,7 +31,7 @@ const chat = async () => {
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-5',
+      model: 'claude-sonnet-4-6',
       max_tokens: 4e3,
       system: SYSTEM_PROMPT,
       messages,
@@ -42,7 +43,9 @@ const chat = async () => {
       ],
     }),
   });
-  return (await res.json()).content;
+  const data = await res.json();
+  console.log('🚀 ~ chat ~ data:', JSON.stringify(data, null, 2))
+  return data.content;
 };
 
 const runTool = ({ input }) =>
@@ -56,12 +59,17 @@ for await (const readLine of process.stdin) {
     const content = await chat();
     // Claude places the actionable block last: either tool_use or final text.
     const last = content.at(-1);
+    const possibleToolResult = messages.at(-1)
 
     store('assistant', content);
 
+    if (possibleToolResult && possibleToolResult.content.at(-1).type === 'tool_result') {
+      process.stdout.write("🤖 [tool_result]\n " + possibleToolResult.content.at(-1).content + "\n");
+    }
+
     if (last.type !== 'tool_use') {
       // End of turn: print assistant text and emit next prompt marker.
-      process.stdout.write(last.text + '\n> ');
+      process.stdout.write("🤖 " + last.text + '\n> ');
       break;
     }
 
