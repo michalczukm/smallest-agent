@@ -7,6 +7,7 @@
   },
   "scripts": {
     "start": "node src/smallest-agent.js",
+    "start:mistral": "node src/agent-raw_mistral.js",
     "build": "terser -c -m --module src/smallest-agent.commented.js > src/smallest-agent.js"
   },
   "dependencies": {
