@@ -54,8 +54,8 @@ const runTool = ({ input }) =>
 
 // Each stdin chunk is one user turn (multi-line paste remains one turn).
 for await (const line of process.stdin) {
-  // Keep calling Claude until the turn ends with plain text (no tool request).
-  for (store('user', line + ''); ; ) {
+  store('user', line + '')
+  while (true) {
     const content = await chat();
     // Claude places the actionable block last: either tool_use or final text.
     const last = content.at(-1);

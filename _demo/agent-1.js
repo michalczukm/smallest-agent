@@ -31,7 +31,9 @@ const rl = readline.createInterface({
 process.stdout.write('> ');
 
 for await (const line of rl) {
-  for (messages.push({ role: 'user', content: line }); ; ) {
+  messages.push({ role: 'user', content: line });
+  
+  while (true) {
     const content = await chat();
     messages.push(content);
 
