@@ -1,19 +1,32 @@
-Some folks were talking about how minimal they could make a functional coding agent.
+# Mini Agent
 
-I decided to play the game.
+This is a minimal fork of minimal agent by @obra -> https://github.com/obra/smallest-agent
 
-`src/agent.ts` was, roughly, what Claude Code could do.
+But more verbose, for the presentation purposes :blush:
 
-Then I set it upon itself.
+## How to use
 
-Over the course of 20 minutes, it golfed itself down to something pretty darn minimal.
+**JUST DON'T!**
 
-`src/smallest-agent.js` is currently 498 bytes.
+> IT HAS UNRESTRICTED BASH ACCESS.
+>
+> IT CAN DO ANYTHING.
+>
+> IT MIGHT DECIDE TO ERASE ALL YOUR FILES AND INSTALL LINUX
 
-`src/smallest-agent.commented.js` is a commented version of the code with easier to read variable names.
+If you'd like to run it, like I do, use f.e. docker sandbox micro-vm or something like that to sandbox the agent.
 
-`terser -c -m --module src/smallest-agent.commented.js > src/smallest-agent.js` is how we do the last bit of the transform.
+https://docs.docker.com/ai/sandboxes/#why-use-docker-sandboxes
 
-IT HAS UNRESTRICTED BASH ACCESS.
-IT CAN DO ANYTHING.
-IT MIGHT DECIDE TO ERASE ALL YOUR FILES AND INSTALL LINUX
+```sh
+docker sandbox run shell ./the-workspace-that-will-be-mounted-into-the-sandbox
+```
+
+then inside the sandbox, run:
+
+```sh
+
+npm install
+npm run build
+npm run start
+```
