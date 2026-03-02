@@ -41,7 +41,7 @@ const chat = async () => {
     }),
   });
   const data = await res.json();
-  console.log('🚀 ~ chat ~ data:', data.choices[0].message)
+  console.log('🚀 ~ chat ~ message:', JSON.stringify(data.choices[0].message, null, 2))
   return data.choices[0].message;
 };
 
@@ -55,7 +55,7 @@ for await (const line of process.stdin) {
 
     if (!msg.tool_calls?.length) {
       // End of turn: print assistant text and emit next prompt marker.
-      process.stdout.write(msg.content + '\n> ');
+      process.stdout.write("👾 " + msg.content + '\n> ');
       break;
     }
 

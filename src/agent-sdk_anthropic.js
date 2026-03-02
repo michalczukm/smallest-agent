@@ -4,13 +4,11 @@ import { execSync } from 'child_process';
 const _SYSTEM_PROMPT = `You are a coding assistant with access to bash commands. 
 You can help with any programming task by executing bash commands.
 
-When you need to run a command, format it like this:
-BASH: command_here
+When you need to run a command, use the sh tool with the command.
 
 I will execute the command and return the result. You can then respond based on the output.
-You can run multiple commands by including multiple BASH: lines in your response.
-
 Be concise and practical. Focus on solving the user's problem efficiently.`;
+
 
 const ai = new Anthropic({ 
   apiKey: process.env.ANTHROPIC_API_KEY,

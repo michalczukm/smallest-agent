@@ -14,29 +14,46 @@ But more verbose, for the presentation purposes :blush:
 >
 > IT MIGHT DECIDE TO ERASE ALL YOUR FILES AND INSTALL LINUX
 
-If you'd like to run it, like I do, use f.e. docker sandbox micro-vm or something like that to sandbox the agent.
+If you'd like to run it, like I do, use [Docker Sandboxes](https://docs.docker.com/ai/sandboxes/) to isolate the agent in a microVM.
 
-https://docs.docker.com/ai/sandboxes/#why-use-docker-sandboxes
+### 1. Start the sandbox (on the host) and set the envs
+
+Copy the `.env.template` to `.env` and fill in the API keys.
 
 ```sh
-docker sandbox run shell ./the-workspace-that-will-be-mounted-into-the-sandbox
+npm run sandbox:run
 ```
 
-then inside the sandbox, run:
+This starts (or resumes) a sandbox for this workspace. The sandbox name is derived from the directory name — e.g. `shell-smallest-agent`.
+
+### 2. Allow outbound traffic to the provider (on the host, once)
+
+The sandbox proxy's default allowlist only covers Anthropic endpoints. For Mistral, run once on the host while the sandbox is running:
 
 ```sh
+npm run sandbox:network
+```
+
+To inspect what traffic is being allowed or blocked:
+
+```sh
+npm run sandbox:log
+```
+
+### 3. Run the agent (inside the sandbox)
+
+```sh
+# clone and install inside the sandbox
 git clone https://github.com/michalczukm/smallest-agent.git && cd smallest-agent
 npm ci
-ANTHROPIC_API_KEY=your-api-key-pls-limit-it npm run start
+
+# Anthropic
+npm run start:anthropic
+
+# Mistral / Codestral
+npm run start:mistral
 ```
 
-### Network policies
+### Network notes
 
-The sandbox proxy's default allowlist only includes Anthropic endpoints. If you use a different provider, add it before starting — e.g. for Mistral:
-
-```sh
-# run this on the HOST, not inside the sandbox
-docker sandbox network proxy <your-sandbox-name> --allow-host api.mistral.ai
-```
-
-Find your sandbox name with `docker sandbox ls`. The policy persists across restarts.
+- Node.js v20 native `fetch` does not respect `HTTP_PROXY`/`HTTPS_PROXY` env vars — the code uses `undici`'s `ProxyAgent` with `HTTPS_PROXY=http://host.docker.internal:3128` to route through the sandbox proxy.
