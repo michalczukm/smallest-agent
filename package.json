@@ -7,11 +7,12 @@
   },
   "scripts": {
     "start": "node src/smallest-agent.js",
-    "start:mistral": "node src/agent-raw_mistral.js",
+    "start:mistral": "unset MISTRAL_API_KEY ANTHROPIC_API_KEY OPENAI_API_KEY; node --env-file=.env src/agent-raw_mistral.js",
     "build": "terser -c -m --module src/smallest-agent.commented.js > src/smallest-agent.js"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "0.78.0"
+    "@anthropic-ai/sdk": "0.78.0",
+    "undici": "^7.22.0"
   },
   "devDependencies": {
     "terser": "5.46.0"

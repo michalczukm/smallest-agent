@@ -29,3 +29,14 @@ git clone https://github.com/michalczukm/smallest-agent.git && cd smallest-agent
 npm ci
 ANTHROPIC_API_KEY=your-api-key-pls-limit-it npm run start
 ```
+
+### Network policies
+
+The sandbox proxy's default allowlist only includes Anthropic endpoints. If you use a different provider, add it before starting — e.g. for Mistral:
+
+```sh
+# run this on the HOST, not inside the sandbox
+docker sandbox network proxy <your-sandbox-name> --allow-host api.mistral.ai
+```
+
+Find your sandbox name with `docker sandbox ls`. The policy persists across restarts.
