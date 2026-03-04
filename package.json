@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "start": "unset MISTRAL_API_KEY && node --env-file=.env src/agent.js",
     "start:anthropic-sdk": "unset ANTHROPIC_API_KEY && node --env-file=.env src/agent-sdk_anthropic.js",
     "start:anthropic": "unset ANTHROPIC_API_KEY && node --env-file=.env src/agent-raw_anthropic.js",
     "start:mistral": "unset MISTRAL_API_KEY && node --env-file=.env src/agent-raw_mistral.js",
