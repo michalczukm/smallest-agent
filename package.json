@@ -8,6 +8,11 @@
     "start:anthropic": "unset ANTHROPIC_API_KEY && node --env-file=.env src/agent-raw_anthropic.js",
     "start:mistral": "unset MISTRAL_API_KEY && node --env-file=.env src/agent-raw_mistral.js",
     "start:mistral-multi-agent": "unset MISTRAL_API_KEY && node --env-file=.env src/agent-raw_mistral-multi-agent.js",
+    "demo:1": "unset MISTRAL_API_KEY && node --env-file=.env _demo/agent-1.js",
+    "demo:2": "unset MISTRAL_API_KEY && node --env-file=.env _demo/agent-2.js",
+    "demo:3": "unset MISTRAL_API_KEY && node --env-file=.env _demo/agent-3.js",
+    "demo:4": "unset MISTRAL_API_KEY && node --env-file=.env _demo/agent-4.js",
+    "demo:5": "unset MISTRAL_API_KEY && node --env-file=.env _demo/agent-5.js",
     "sandbox:run": "docker sandbox run shell .",
     "sandbox:network": "docker sandbox network proxy shell-$(basename $(pwd)) --allow-host api.mistral.ai --allow-host api.anthropic.com",
     "sandbox:log": "docker sandbox network log"
