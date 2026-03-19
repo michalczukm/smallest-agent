@@ -6,9 +6,6 @@ import { ProxyAgent } from 'undici';
 
 // --- Configuration ---
 
-const MAIN_MODEL = 'mistral-large-2512';
-const CODING_MODEL = 'devstral-latest';
-
 const MAIN_SYSTEM_PROMPT = `You are a helpful assistant with access to a coding specialist.
 - You can help with general tasks and have access to bash commands.
 - For ANY coding, programming, or software development task, you MUST delegate it to the coding agent using the "delegate_coding_task" tool.
@@ -16,77 +13,13 @@ const MAIN_SYSTEM_PROMPT = `You are a helpful assistant with access to a coding 
 - You can also save memories using "memorize".
 - Be concise and practical.`;
 
-const CODING_SYSTEM_PROMPT = `You are a specialized coding agent using the ${CODING_MODEL} model.
+const CODING_SYSTEM_PROMPT = `You are a specialized coding agent using the devstral-latest model.
 - You are an expert in software development.
 - You can execute bash commands using the "sh" tool to run tests, list files, or manage the project.
 - You should focus purely on the coding task provided.
 - When you are done, return a final response describing what you did.`;
 
 // --- Tools ---
-
-const toolsMain = [
-  {
-    type: 'function',
-    function: {
-      name: 'sh',
-      description: 'Execute a shell command',
-      parameters: {
-        type: 'object',
-        properties: { command: { type: 'string' } },
-        required: ['command'],
-      },
-    },
-  },
-  {
-    type: 'function',
-    function: {
-      name: 'memorize',
-      description: 'Store information in memory for later retrieval.',
-      parameters: {
-        type: 'object',
-        properties: {
-          content: {
-            type: 'string',
-            description: 'The information to be stored in memory.',
-          },
-        },
-        required: ['content'],
-      },
-    },
-  },
-  {
-    type: 'function',
-    function: {
-      name: 'delegate_coding_task',
-      description: 'Delegate a coding task to the specialist coding agent.',
-      parameters: {
-        type: 'object',
-        properties: {
-          task: {
-            type: 'string',
-            description: 'The detailed coding task description.',
-          },
-        },
-        required: ['task'],
-      },
-    },
-  },
-];
-
-const toolsCoding = [
-  {
-    type: 'function',
-    function: {
-      name: 'sh',
-      description: 'Execute a shell command',
-      parameters: {
-        type: 'object',
-        properties: { command: { type: 'string' } },
-        required: ['command'],
-      },
-    },
-  },
-];
 
 // --- Helper Functions ---
 
@@ -146,21 +79,86 @@ const chat = async (model, messages, tools) => {
 
 // --- Agents ---
 
+const runMainAgent = async (messages) => {
+  const response = await chat('mistral-large-2512', messages, [
+    {
+      type: 'function',
+      function: {
+        name: 'sh',
+        description: 'Execute a shell command',
+        parameters: {
+          type: 'object',
+          properties: { command: { type: 'string' } },
+          required: ['command'],
+        },
+      },
+    },
+    {
+      type: 'function',
+      function: {
+        name: 'memorize',
+        description: 'Store information in memory for later retrieval.',
+        parameters: {
+          type: 'object',
+          properties: {
+            content: {
+              type: 'string',
+              description: 'The information to be stored in memory.',
+            },
+          },
+          required: ['content'],
+        },
+      },
+    },
+    {
+      type: 'function',
+      function: {
+        name: 'delegate_coding_task',
+        description: 'Delegate a coding task to the specialist coding agent.',
+        parameters: {
+          type: 'object',
+          properties: {
+            task: {
+              type: 'string',
+              description: 'The detailed coding task description.',
+            },
+          },
+          required: ['task'],
+        },
+      },
+    },
+  ]);
+  return response;
+};
+
 // The Coding Agent Loop
 const runCodingAgent = async (task) => {
   console.log(`\n👷 [Coding Agent] Starting task: "${task}"`);
-  
+
   const messages = [
     { role: 'system', content: CODING_SYSTEM_PROMPT },
-    { role: 'user', content: task }
+    { role: 'user', content: task },
   ];
 
   // Limit turns to prevent infinite loops in demo
   const MAX_TURNS = 20;
-  
+
   for (let i = 0; i < MAX_TURNS; i++) {
     console.log(`👷 [Coding Agent] Turn ${i + 1}`);
-    const response = await chat(CODING_MODEL, messages, toolsCoding);
+    const response = await chat('devstral-latest', messages, [
+      {
+        type: 'function',
+        function: {
+          name: 'sh',
+          description: 'Execute a shell command',
+          parameters: {
+            type: 'object',
+            properties: { command: { type: 'string' } },
+            required: ['command'],
+          },
+        },
+      },
+    ]);
     messages.push(response);
 
     if (response.content) {
@@ -194,8 +192,8 @@ const runCodingAgent = async (task) => {
       });
     }
   }
-  
-  return "Coding agent reached maximum turns without completing.";
+
+  return 'Coding agent reached maximum turns without completing.';
 };
 
 // --- Main Loop ---
@@ -215,7 +213,7 @@ for await (const line of rl) {
 
   while (true) {
     // Main Agent Turn
-    const response = await chat(MAIN_MODEL, messages, toolsMain);
+    const response = await runMainAgent(messages);
     messages.push(response);
 
     if (!response.tool_calls || response.tool_calls.length === 0) {
