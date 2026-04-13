@@ -57,3 +57,46 @@ npm run start:mistral
 ### Network notes
 
 - Node.js v20 native `fetch` does not respect `HTTP_PROXY`/`HTTPS_PROXY` env vars — the code uses `undici`'s `ProxyAgent` with `HTTPS_PROXY=http://host.docker.internal:3128` to route through the sandbox proxy.
+
+## Show LLM usage stats
+
+The stats demo writes token usage data to a JSON file and lets you watch it live in a terminal UI.
+
+### Run the stats demo
+
+Start the demo agent in one terminal:
+
+```sh
+npm run demo:stats
+```
+
+This writes live stats to `dist/agent-stats.json`.
+
+Then start the viewer in another terminal:
+
+```sh
+npm run demo:stats-view
+```
+
+By default, the viewer watches `dist/agent-stats.json` and refreshes automatically as the file changes.
+
+### View stats from a specific file
+
+You can also point the viewer at a specific stats file:
+
+```sh
+npm run demo:stats-view -- ./dist/agent-stats.json
+```
+
+For example, this is useful if you copied the stats file elsewhere and want to inspect it later:
+
+```sh
+npm run demo:stats-view -- /path/to/agent-stats.json
+```
+
+### Example output
+
+<p align="center">
+  <img src="./assets/live-stats-1.png" alt="Live LLM stats viewer showing per-call token usage" width="49%" />
+  <img src="./assets/live-stats-2.png" alt="Live LLM stats viewer showing session totals and call summaries" width="49%" />
+</p>
