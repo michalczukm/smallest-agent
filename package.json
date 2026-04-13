@@ -13,6 +13,8 @@
     "demo:3": "unset MISTRAL_API_KEY && node --env-file=.env _demo/agent-3.js",
     "demo:4": "unset MISTRAL_API_KEY && node --env-file=.env _demo/agent-4.js",
     "demo:5": "unset MISTRAL_API_KEY && node --env-file=.env _demo/agent-5.js",
+    "demo:stats": "unset MISTRAL_API_KEY && node --env-file=.env _demo/agent-stats.js",
+    "demo:stats-view": "node --import tsx/esm _demo/agent-stats-viewer.jsx",
     "sandbox:run": "docker sandbox run shell .",
     "sandbox:network": "docker sandbox network proxy shell-$(basename $(pwd)) --allow-host api.mistral.ai --allow-host api.anthropic.com",
     "sandbox:log": "docker sandbox network log"
@@ -20,6 +22,11 @@
   "dependencies": {
     "@anthropic-ai/sdk": "0.78.0",
     "@modelcontextprotocol/sdk": "1.27.1",
+    "ink": "7.0.0",
+    "react": "19.2.5",
     "undici": "^7.22.0"
+  },
+  "devDependencies": {
+    "tsx": "4.21.0"
   }
 }
