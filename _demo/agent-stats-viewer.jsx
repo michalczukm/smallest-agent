@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { render, Box, Text, Spacer } from 'ink';
 import fs from 'node:fs';
 
@@ -8,6 +8,14 @@ const POLL_MS = 600;
 
 const statsFilePath = process.argv[2] ?? STATS_FILE_PATH;
 const CONTEXT_BAR_WIDTH = 20;
+
+const statsMtime = () => {
+  try {
+    return fs.statSync(statsFilePath).mtimeMs;
+  } catch {
+    return null;
+  }
+};
 
 const readStatsFile = () => {
   try {
@@ -99,9 +107,13 @@ const CallCard = ({ call, isLast }) => {
 
 const StatsViewer = () => {
   const [data, setData] = useState(readStatsFile);
+  const lastMtime = useRef(statsMtime());
 
   useEffect(() => {
     const interval = setInterval(() => {
+      const mtime = statsMtime();
+      if (mtime === lastMtime.current) return;
+      lastMtime.current = mtime;
       const fresh = readStatsFile();
       if (fresh) setData(fresh);
     }, POLL_MS);
