@@ -2,7 +2,8 @@
 
 This is a minimal fork of minimal agent by @obra -> https://github.com/obra/smallest-agent
 
-But more verbose, for the presentation purposes :blush:
+But more verbose, for the **"Your AI Agent is just a while loop with an API call. Let me prove it"** presentation purposes :blush:
+Check the slides presentation on [slides.com/michalczukm/your-ai-agent-is-while-loop-short](https://slides.com/michalczukm/your-ai-agent-is-while-loop-short)
 
 ## How to use
 
