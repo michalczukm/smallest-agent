@@ -180,6 +180,8 @@ const runCodingAgent = async (task) => {
       console.log(`👷 [Coding Agent] calling tool: ${name}`);
 
       if (name === 'sh') {
+        const displayCommand = parsedArgs.command?.length > 300 ? parsedArgs.command.slice(0, 300) + '...' : parsedArgs.command;
+        console.log(`🔨${name}: \x1b[32m ${displayCommand}\x1b[0m`);
         output = runShell(parsedArgs.command);
       } else {
         output = `Error: Unknown tool ${name}`;
