@@ -33,7 +33,7 @@ const dispatcher = process.env.HTTPS_PROXY
 
 const chat = async () => {
   const requestMessages = [{ role: 'system', content: SYSTEM_PROMPT }, ...messages];
-  console.log('📨 ~ chat ~ messages:', JSON.stringify(messages, null, 2));
+  console.log('\x1b[32m📨 ~ chat ~ messages:', JSON.stringify(messages, null, 2), '\x1b[0m');
   const res = await fetch('https://api.mistral.ai/v1/chat/completions', {
     method: 'POST',
     dispatcher,
@@ -82,7 +82,7 @@ const chat = async () => {
     throw new Error(`Mistral API error (${res.status}): ${JSON.stringify(data)}`);
   }
 
-  console.log('🚀 ~ chat ~ response:', JSON.stringify(data, null, 2));
+  console.log('\x1b[34m🚀 ~ chat ~ response:', JSON.stringify(data, null, 2), '\x1b[0m');
   return {
     message: data.choices[0]?.message,
     usage: data.usage,

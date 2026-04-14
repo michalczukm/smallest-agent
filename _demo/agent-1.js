@@ -5,7 +5,7 @@ const SYSTEM_PROMPT = `You are a coding assistant.`;
 const messages = [];
 
 const chat = async () => {
-  console.log('📨 ~ chat ~ messages:', JSON.stringify(messages, null, 2));
+  console.log('\x1b[32m📨 ~ chat ~ messages:', JSON.stringify(messages, null, 2), '\x1b[0m');
   const res = await fetch('https://api.mistral.ai/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -19,7 +19,7 @@ const chat = async () => {
   });
 
   const data = await res.json();
-  console.log('🚀 ~ chat ~ response:', JSON.stringify(data, null, 2));
+  console.log('\x1b[34m🚀 ~ chat ~ response:', JSON.stringify(data, null, 2), '\x1b[0m');
   return data.choices[0].message;
 };
 
